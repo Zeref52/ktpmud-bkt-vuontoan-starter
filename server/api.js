@@ -8,6 +8,8 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const db = require('./db');
 const { setAuthCookie, clearAuthCookie, requireAuth, requireTeacher } = require('./auth');
+const { randomUUID } = require('crypto');
+const { generateMathProblem, scoreMathAnswer } = require('./math-logic');
 
 const router = express.Router();
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
@@ -158,6 +160,71 @@ router.get('/question-sets/:setId/questions', requireAuth, (req, res) => {
   const rows = db.prepare('SELECT id,type,prompt,options_json,points,category FROM questions WHERE set_id=? ORDER BY sort_order').all(req.params.setId);
   if (!rows.length) return res.status(404).json({ error: 'Không tìm thấy bộ câu hỏi.' });
   res.json({ setId: req.params.setId, questions: rows.map(r => ({ ...r, options: r.options_json ? JSON.parse(r.options_json) : undefined, options_json: undefined })) });
+});
+
+/* Kiểm tra nhanh tình trạng server (dùng khi deploy để hosting tự giám sát) */
+/* ---------------- Bài toán ngẫu nhiên & chấm ước lượng ---------------- */
+// Đáp án được giữ ở server; trình duyệt chỉ nhận nội dung câu hỏi và toán hạng.
+const mathChallenges = new Map();
+const MATH_CHALLENGE_TTL_MS = 30 * 60 * 1000;
+const MAX_MATH_CHALLENGES = 1000;
+
+function cleanupMathChallenges(now = Date.now()) {
+  for (const [id, challenge] of mathChallenges) {
+    if (challenge.expiresAt <= now) mathChallenges.delete(id);
+  }
+  while (mathChallenges.size > MAX_MATH_CHALLENGES) {
+    mathChallenges.delete(mathChallenges.keys().next().value);
+  }
+}
+
+router.get('/math/generate', requireAuth, (req, res) => {
+  cleanupMathChallenges();
+  const problem = generateMathProblem();
+  const questionId = randomUUID();
+  mathChallenges.set(questionId, {
+    ...problem,
+    userId: req.user.id,
+    expiresAt: Date.now() + MATH_CHALLENGE_TTL_MS,
+  });
+
+  res.json({
+    questionId,
+    question: {
+      a: problem.a,
+      b: problem.b,
+      operator: problem.operator,
+      prompt: problem.prompt,
+    },
+  });
+});
+
+router.post('/math/score', requireAuth, (req, res) => {
+  const { questionId, uoc_luong, ket_qua_dung } = req.body || {};
+  if (!questionId) {
+    return res.status(400).json({ error: 'Thiếu questionId.' });
+  }
+
+  cleanupMathChallenges();
+  const problem = mathChallenges.get(String(questionId));
+  if (!problem || problem.userId !== req.user.id) {
+    return res.status(404).json({ error: 'Bài toán không tồn tại, đã hết hạn hoặc không thuộc tài khoản này.' });
+  }
+
+  try {
+    const result = scoreMathAnswer({
+      a: problem.a,
+      b: problem.b,
+      operator: problem.operator,
+      uoc_luong,
+      ket_qua_dung,
+    });
+    // Mỗi đề chỉ được chấm một lần.
+    mathChallenges.delete(String(questionId));
+    return res.json({ questionId, ...result });
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
 });
 
 /* ---------------- Nộp bài & chấm điểm trên server ---------------- */
