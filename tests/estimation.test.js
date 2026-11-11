@@ -1,4 +1,5 @@
-const assert = require('assert');
+const test = require('node:test');
+const assert = require('node:assert');
 
 function checkEstimationLogic(a, b, op, estimateVal, exactVal) {
   const trueExact = op === '+' ? a + b : a - b;
@@ -11,21 +12,19 @@ function checkEstimationLogic(a, b, op, estimateVal, exactVal) {
   return { isExactCorrect, isEstimateValid };
 }
 
-describe('Kiểm thử logic dạng bài: Ước lượng trước khi tính đúng (Track B)', () => {
-  it('Phép cộng: 38 + 53 = 91, ước lượng 90 là hợp lệ', () => {
-    const result = checkEstimationLogic(38, 53, '+', 90, 91);
-    assert.strictEqual(result.isExactCorrect, true);
-    assert.strictEqual(result.isEstimateValid, true);
-  });
+test('Ước lượng phép cộng: 38 + 53 = 91, ước lượng 90 là hợp lệ', () => {
+  const result = checkEstimationLogic(38, 53, '+', 90, 91);
+  assert.strictEqual(result.isExactCorrect, true);
+  assert.strictEqual(result.isEstimateValid, true);
+});
 
-  it('Phép trừ: 154 - 68 = 86, ước lượng 80 là hợp lệ', () => {
-    const result = checkEstimationLogic(154, 68, '-', 80, 86);
-    assert.strictEqual(result.isExactCorrect, true);
-    assert.strictEqual(result.isEstimateValid, true);
-  });
+test('Ước lượng phép trừ: 154 - 68 = 86, ước lượng 80 là hợp lệ', () => {
+  const result = checkEstimationLogic(154, 68, '-', 80, 86);
+  assert.strictEqual(result.isExactCorrect, true);
+  assert.strictEqual(result.isEstimateValid, true);
+});
 
-  it('Điều kiện biên: Số bị trừ luôn lớn hơn số trừ để kết quả không âm', () => {
-    const a = 200, b = 150;
-    assert.ok(a >= b, 'Lỗi sư phạm: Số bị trừ nhỏ hơn số trừ');
-  });
+test('Ràng buộc an toàn: Số bị trừ luôn lớn hơn hoặc bằng số trừ', () => {
+  const a = 200, b = 150;
+  assert.ok(a >= b, 'Lỗi sư phạm: Số bị trừ nhỏ hơn số trừ gây ra số âm');
 });
