@@ -180,7 +180,9 @@ function cleanupMathChallenges(now = Date.now()) {
 
 router.get('/math/generate', requireAuth, (req, res) => {
   cleanupMathChallenges();
-  const problem = generateMathProblem();
+  const problem = generateMathProblem(Math.random, {
+  useFixtures: true,
+  });
   const questionId = randomUUID();
   mathChallenges.set(questionId, {
     ...problem,
