@@ -179,55 +179,69 @@ function cleanupMathChallenges(now = Date.now()) {
 }
 
 router.get('/math/generate', requireAuth, (req, res) => {
-  cleanupMathChallenges();
-  const problem = generateMathProblem(Math.random, {
-  useFixtures: true,
-  });
-  const questionId = randomUUID();
-  mathChallenges.set(questionId, {
-    ...problem,
-    userId: req.user.id,
-    expiresAt: Date.now() + MATH_CHALLENGE_TTL_MS,
-  });
+  try {
+    cleanupMathChallenges();
 
-  res.json({
-    questionId,
-    question: {
-      a: problem.a,
-      b: problem.b,
-      operator: problem.operator,
-      prompt: problem.prompt,
-    },
-  });
+    const problem = generateMathProblem(Math.random, {
+      useFixtures: true,
+    });
+
+    const questionId = randomUUID();
+
+    mathChallenges.set(questionId, {
+      ...problem,
+      userId: req.user.id,
+      expiresAt: Date.now() + MATH_CHALLENGE_TTL_MS,
+    });
+
+    return res.json({
+      questionId,
+      question: {
+        a: problem.a,
+        b: problem.b,
+        operator: problem.operator,
+        prompt: problem.prompt,
+      },
+    });
+  } catch (error) {
+    console.error('[Math Generate Error]:', error);
+
+    return res.status(500).json({
+      error: 'Không thể tạo bài toán.',
+    });
+  }
 });
 
 router.post('/math/score', requireAuth, (req, res) => {
-  const { questionId, uoc_luong, ket_qua_dung } = req.body || {};
-
-  if (!questionId) {
-    return res.status(400).json({ error: 'Thiếu questionId.' });
-  }
-
-  cleanupMathChallenges();
-
-  const problem = mathChallenges.get(String(questionId));
-
-  if (!problem || problem.userId !== req.user.id) {
-    return res.status(404).json({
-      error: 'Bài toán không tồn tại, đã hết hạn hoặc không thuộc tài khoản này.'
-    });
-  }
-
   try {
+    const { questionId, uoc_luong, ket_qua_dung } = req.body;
+
+    if (!questionId) {
+      return res.status(400).json({
+        error: 'Thiếu mã câu hỏi.',
+      });
+    }
+
+    cleanupMathChallenges();
+
+    const challenge = mathChallenges.get(String(questionId));
+
+    if (!challenge || challenge.userId !== req.user.id) {
+      return res.status(400).json({
+        error: 'Câu hỏi không hợp lệ hoặc đã hết hạn.',
+      });
+    }
+
     const result = scoreMathAnswer({
-      a: problem.a,
-      b: problem.b,
-      operator: problem.operator,
+      a: challenge.a,
+      b: challenge.b,
+      operator: challenge.operator,
       uoc_luong,
       ket_qua_dung,
     });
-    
-    // Lưu kết quả làm bài vào SQLite.
+
+    const questionText = challenge.prompt;
+
     db.prepare(`
       INSERT INTO estimate_attempts (
         user_id,
@@ -247,31 +261,34 @@ router.post('/math/score', requireAuth, (req, res) => {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(
       req.user.id,
-      questionId,
-      problem.prompt,
-      problem.a,
-      problem.b,
-      problem.operator,
+      String(questionId),
+      questionText,
+      challenge.a,
+      challenge.b,
+      challenge.operator,
       Number(uoc_luong),
       Number(ket_qua_dung),
       result.expectedEstimate,
       result.expectedResult,
-      result.estimateCorrect ? 1 : 0,
-      result.exactCorrect ? 1 : 0,
+      Number(result.estimateCorrect),
+      Number(result.exactCorrect),
       result.score
     );
 
-      // Chỉ xóa câu hỏi sau khi lưu kết quả thành công.
-  mathChallenges.delete(String(questionId));
+    mathChallenges.delete(String(questionId));
 
-  return res.json({ questionId, ...result });
+    return res.json({
+      questionId,
+      ...result,
+    });
+  } catch (error) {
+    console.error('[Math Score Error]:', error);
 
-  } 
-  catch (error) {
-    return res.status(400).json({ error: error.message });
+    return res.status(400).json({
+      error: error.message || 'Không thể chấm bài.',
+    });
   }
 });
-
 
 /* ---------------- Lịch sử làm bài toán ước lượng ---------------- */
 router.get('/math/history', requireAuth, (req, res) => {
@@ -298,11 +315,14 @@ router.get('/math/history', requireAuth, (req, res) => {
       LIMIT 50
     `).all(req.user.id);
 
-    return res.json({ history: rows });
+    return res.json({
+      history: rows,
+    });
   } catch (error) {
     console.error('[Math History Error]:', error);
+
     return res.status(500).json({
-      error: 'Không thể tải lịch sử làm bài.'
+      error: 'Không thể tải lịch sử làm bài.',
     });
   }
 });
