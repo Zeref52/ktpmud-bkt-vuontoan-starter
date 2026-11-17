@@ -105,7 +105,7 @@ test('POST /api/math/score chấm bài và GET /api/math/history đọc lại đ
   const historyResponse = await fetch(`${baseUrl}/api/math/history`, { headers: authHeaders() });
   assert.equal(historyResponse.status, 200);
   const history = await historyResponse.json();
-  const saved = history.attempts.find(item => item.questionId === generated.questionId);
+  const saved = history.history.find(item => item.questionId === generated.questionId);
 
   assert.ok(saved, 'Lượt chấm vừa thực hiện phải có trong lịch sử');
   assert.equal(saved.uoc_luong, estimate);
@@ -120,13 +120,31 @@ test('History API yêu cầu đăng nhập', async () => {
 });
 
 test('Fixture có đúng 12 câu, phép tính khớp đáp án và không sinh kết quả âm/chia dư', () => {
-  const fixturePath = path.join(__dirname, '..', 'server', 'fixtures', 'estimate.json');
-  const fixture = JSON.parse(fs.readFileSync(fixturePath, 'utf8'));
-  assert.equal(fixture.questions.length, 12);
+  const fixturePath = path.join(
+    __dirname,
+    '..',
+    'server',
+    'fixtures',
+    'estimate.json'
+  );
 
-  for (const question of fixture.questions) {
-    const actual = calculate(question.a, question.b, question.operator);
+  const fixture = JSON.parse(fs.readFileSync(fixturePath, 'utf8'));
+
+  assert.equal(fixture.items.length, 12);
+
+  for (const question of fixture.items) {
+    const actual = calculate(
+      question.a,
+      question.b,
+      question.operator
+    );
+
     assert.equal(actual, question.expectedResult, question.id);
-    assert.equal(Math.round(actual / 10) * 10, question.expectedEstimate, question.id);
+
+    assert.equal(
+      Math.round(actual / 10) * 10,
+      question.expectedEstimate,
+      question.id
+    );
   }
 });
