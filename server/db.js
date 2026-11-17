@@ -11,7 +11,12 @@ const bcrypt = require('bcryptjs');
 
 // Khi deploy lên hosting có ổ đĩa bền (persistent disk), đặt DB_PATH trỏ vào đó
 // để không mất dữ liệu mỗi lần server khởi động lại.
-const DB_PATH = globalThis.process.env['DB_' + 'PATH'] || path.join(__dirname, '..', 'data', 'vuon-toan.db');
+const DB_PATH = process.env.DB_PATH || path.join(
+  __dirname,
+  '..',
+  'data',
+  'vuon-toan.db'
+);
 const SEED_PATH = path.join(__dirname, '..', 'data', 'seed.json');
 
 const db = new Database(DB_PATH);
