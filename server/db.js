@@ -104,6 +104,25 @@ CREATE TABLE IF NOT EXISTS game_scores (
   duration_sec  INTEGER DEFAULT 0,
   created_at    TEXT NOT NULL DEFAULT (datetime('now','localtime'))
 );
+CREATE TABLE IF NOT EXISTS estimate_attempts (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  question_id TEXT NOT NULL,
+  question_text TEXT NOT NULL,
+  a INTEGER NOT NULL,
+  b INTEGER NOT NULL,
+  operator TEXT NOT NULL CHECK (operator IN ('+', '-', '×', '÷')),
+  uoc_luong INTEGER NOT NULL,
+  ket_qua_dung INTEGER NOT NULL,
+  expected_estimate INTEGER NOT NULL,
+  expected_result INTEGER NOT NULL,
+  estimate_correct INTEGER NOT NULL CHECK (estimate_correct IN (0, 1)),
+  exact_correct INTEGER NOT NULL CHECK (exact_correct IN (0, 1)),
+  score INTEGER NOT NULL CHECK (score BETWEEN 0 AND 2),
+  created_at TEXT NOT NULL DEFAULT (datetime('now','localtime'))
+);
+CREATE INDEX IF NOT EXISTS idx_estimate_attempts_user_created
+ON estimate_attempts(user_id, created_at DESC, id DESC);
 `);
 
 // Migration an toàn cho DB cũ trên máy chủ / persistent disk
