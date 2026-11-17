@@ -1,10 +1,50 @@
 'use strict';
 
+const fs = require('fs');
+const path = require('path');
+
 /**
  * Logic thuần cho bài toán thực tế lớp 3.
  * Không phụ thuộc Express/SQLite để có thể Unit Test độc lập.
  */
 const OPERATORS = Object.freeze(['+', '-', '×', '÷']);
+const FIXTURE_PATH = path.join(
+  __dirname,
+  '..',
+  'data',
+  'estimate-fixtures.json'
+);
+
+let fixtureIndex = 0;
+
+function loadEstimateFixtures() {
+  const content = fs.readFileSync(FIXTURE_PATH, 'utf8');
+  const data = JSON.parse(content);
+
+  if (!Array.isArray(data.items) || data.items.length === 0) {
+    throw new Error('File estimate-fixtures.json không có câu hỏi.');
+  }
+
+  return data.items;
+}
+
+function generateFixtureProblem() {
+  const fixtures = loadEstimateFixtures();
+
+  const item = fixtures[fixtureIndex % fixtures.length];
+  fixtureIndex++;
+
+  return {
+    questionId: item.id,
+    a: item.a,
+    b: item.b,
+    operator: item.operator,
+    prompt: item.prompt,
+    expectedResult: item.expectedResult,
+    expectedEstimate: item.expectedEstimate,
+    estimateAcceptRange: item.estimateAcceptRange,
+  };
+}
 
 function randomInt(min, max, rng = Math.random) {
   return Math.floor(rng() * (max - min + 1)) + min;
@@ -119,22 +159,33 @@ function scoreMathAnswer({ a, b, operator, uoc_luong, ket_qua_dung }) {
   const exactCorrect = exactAnswer === expectedResult;
 
   return {
-    uoc_luong_dung: estimateCorrect,
-    tinh_dung: exactCorrect,
-    danh_gia: [
-      estimateCorrect ? 'Đạt ước lượng' : 'Chưa đạt ước lượng',
-      exactCorrect ? 'Tính đúng' : 'Chưa tính đúng',
-    ],
-    ket_qua_uoc_luong: expectedEstimate,
-    ket_qua_chinh_xac: expectedResult,
-    diem: Number(estimateCorrect) + Number(exactCorrect),
-    tong_diem: 2,
-  };
+  uoc_luong_dung: estimateCorrect,
+  tinh_dung: exactCorrect,
+
+  danh_gia: [
+    estimateCorrect ? 'Đạt ước lượng' : 'Chưa đạt ước lượng',
+    exactCorrect ? 'Tính đúng' : 'Chưa tính đúng',
+  ],
+
+  ket_qua_uoc_luong: expectedEstimate,
+  ket_qua_chinh_xac: expectedResult,
+  diem: Number(estimateCorrect) + Number(exactCorrect),
+  tong_diem: 2,
+
+  // Các trường phục vụ API và lưu SQLite
+  estimateCorrect,
+  exactCorrect,
+  expectedEstimate,
+  expectedResult,
+  score: Number(estimateCorrect) + Number(exactCorrect),
+ };
 }
 
 module.exports = {
   OPERATORS,
   calculate,
   generateMathProblem,
+  generateFixtureProblem,
+  loadEstimateFixtures,
   scoreMathAnswer,
 };
