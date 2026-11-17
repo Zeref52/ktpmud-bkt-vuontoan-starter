@@ -34,6 +34,16 @@ function generateFixtureProblem() {
   const item = fixtures[fixtureIndex % fixtures.length];
   fixtureIndex++;
 
+  const actualResult = calculate(item.a, item.b, item.operator);
+  const actualEstimate = Math.round(actualResult / 10) * 10;
+
+  if (
+    actualResult !== item.expectedResult ||
+    actualEstimate !== item.expectedEstimate
+  ) {
+    throw new Error(`Dữ liệu fixture ${item.id} không hợp lệ.`);
+  }
+
   return {
     questionId: item.id,
     a: item.a,
@@ -97,7 +107,10 @@ function buildStory(a, b, operator, rng) {
 }
 
 /** Sinh một bài toán có phép tính và kết quả luôn là số nguyên dương. */
-function generateMathProblem(rng = Math.random) {
+function generateMathProblem(rng = Math.random, options = {}) {
+  if (options.useFixtures) {
+    return generateFixtureProblem();
+  }
   const operator = OPERATORS[randomInt(0, OPERATORS.length - 1, rng)];
   let a;
   let b;
@@ -159,28 +172,27 @@ function scoreMathAnswer({ a, b, operator, uoc_luong, ket_qua_dung }) {
   const exactCorrect = exactAnswer === expectedResult;
 
   return {
-  uoc_luong_dung: estimateCorrect,
-  tinh_dung: exactCorrect,
+    uoc_luong_dung: estimateCorrect,
+    tinh_dung: exactCorrect,
 
-  danh_gia: [
-    estimateCorrect ? 'Đạt ước lượng' : 'Chưa đạt ước lượng',
-    exactCorrect ? 'Tính đúng' : 'Chưa tính đúng',
-  ],
+    danh_gia: [
+      estimateCorrect ? 'Đạt ước lượng' : 'Chưa đạt ước lượng',
+      exactCorrect ? 'Tính đúng' : 'Chưa tính đúng',
+    ],
 
-  ket_qua_uoc_luong: expectedEstimate,
-  ket_qua_chinh_xac: expectedResult,
-  diem: Number(estimateCorrect) + Number(exactCorrect),
-  tong_diem: 2,
+    ket_qua_uoc_luong: expectedEstimate,
+    ket_qua_chinh_xac: expectedResult,
+    diem: Number(estimateCorrect) + Number(exactCorrect),
+    tong_diem: 2,
 
-  // Các trường phục vụ API và lưu SQLite
-  estimateCorrect,
-  exactCorrect,
-  expectedEstimate,
-  expectedResult,
-  score: Number(estimateCorrect) + Number(exactCorrect),
- };
-}
-
+    // Các trường phục vụ API và lưu SQLite
+    estimateCorrect,
+    exactCorrect,
+    expectedEstimate,
+    expectedResult,
+    score: Number(estimateCorrect) + Number(exactCorrect),
+  };
+  
 module.exports = {
   OPERATORS,
   calculate,
