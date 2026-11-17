@@ -11,8 +11,8 @@ const OPERATORS = Object.freeze(['+', '-', '×', '÷']);
 const FIXTURE_PATH = path.join(
   __dirname,
   '..',
-  'data',
-  'estimate-fixtures.json'
+  'fixtures',
+  'estimate.json'
 );
 
 let fixtureIndex = 0;
