@@ -272,6 +272,42 @@ router.post('/math/score', requireAuth, (req, res) => {
   }
 });
 
+
+/* ---------------- Lịch sử làm bài toán ước lượng ---------------- */
+router.get('/math/history', requireAuth, (req, res) => {
+  try {
+    const rows = db.prepare(`
+      SELECT
+        id,
+        question_id,
+        question_text,
+        a,
+        b,
+        operator,
+        uoc_luong,
+        ket_qua_dung,
+        expected_estimate,
+        expected_result,
+        estimate_correct,
+        exact_correct,
+        score,
+        created_at
+      FROM estimate_attempts
+      WHERE user_id = ?
+      ORDER BY created_at DESC, id DESC
+      LIMIT 50
+    `).all(req.user.id);
+
+    return res.json({ history: rows });
+  } catch (error) {
+    console.error('[Math History Error]:', error);
+    return res.status(500).json({
+      error: 'Không thể tải lịch sử làm bài.'
+    });
+  }
+});
+
+
 /* ---------------- Nộp bài & chấm điểm trên server ---------------- */
 // Metadata bộ bài lấy từ bảng question_sets (giáo viên tạo bộ mới là nộp/chấm được ngay)
 function setMeta(setId) {
