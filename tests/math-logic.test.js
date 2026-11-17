@@ -80,6 +80,10 @@ test('scoring công nhận ước lượng trong sai số 5 và đáp án chính
   assert.equal(result.uoc_luong_dung, true);
   assert.equal(result.tinh_dung, true);
   assert.equal(result.diem, 2);
+  assert.equal(
+  question.expectedEstimate,
+  Math.round(question.expectedResult / 10) * 10
+  );
   assert.deepEqual(
     result.danh_gia,
     ['Đạt ước lượng', 'Tính đúng']
