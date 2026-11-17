@@ -226,10 +226,7 @@ router.post('/math/score', requireAuth, (req, res) => {
       uoc_luong,
       ket_qua_dung,
     });
-
-    // Mỗi đề chỉ được chấm một lần.
-    mathChallenges.delete(String(questionId));
-
+    
     // Lưu kết quả làm bài vào SQLite.
     db.prepare(`
       INSERT INTO estimate_attempts (
@@ -264,9 +261,13 @@ router.post('/math/score', requireAuth, (req, res) => {
       result.score
     );
 
-    return res.json({ questionId, ...result });
+      // Chỉ xóa câu hỏi sau khi lưu kết quả thành công.
+  mathChallenges.delete(String(questionId));
 
-  } catch (error) {
+  return res.json({ questionId, ...result });
+
+  } 
+  catch (error) {
     return res.status(400).json({ error: error.message });
   }
 });
