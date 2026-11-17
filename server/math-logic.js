@@ -17,7 +17,7 @@ function loadEstimateFixtures() {
   const data = JSON.parse(content);
 
   if (!Array.isArray(data.items) || data.items.length === 0) {
-    throw new Error('File estimate-fixtures.json không có câu hỏi.');
+    throw new Error('File server/fixtures/estimate.json không có câu hỏi.');
   }
 
   return data.items;
