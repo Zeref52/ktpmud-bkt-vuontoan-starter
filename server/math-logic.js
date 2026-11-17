@@ -8,12 +8,7 @@ const path = require('path');
  * Không phụ thuộc Express/SQLite để có thể Unit Test độc lập.
  */
 const OPERATORS = Object.freeze(['+', '-', '×', '÷']);
-const FIXTURE_PATH = path.join(
-  __dirname,
-  '..',
-  'fixtures',
-  'estimate.json'
-);
+const FIXTURE_PATH = path.join(__dirname, 'fixtures', 'estimate.json');
 
 let fixtureIndex = 0;
 
