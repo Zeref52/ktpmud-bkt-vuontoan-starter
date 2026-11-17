@@ -1,0 +1,546 @@
+{
+  "version": "1.0",
+  "note": "Dữ liệu synthetic do nhóm tự soạn, không lấy từ học sinh thật. Quy tắc: expectedEstimate = Math.round(R/10)*10; ước lượng đạt khi |E - expectedEstimate| <= 5.",
+  "items": [
+    {
+      "id": "EST-01",
+      "a": 245,
+      "b": 138,
+      "operator": "+",
+      "prompt": "Ở thư viện có 245 quyển sách, sau đó được bổ sung thêm 138 quyển sách. Hỏi có tất cả bao nhiêu quyển sách?",
+      "expectedResult": 383,
+      "expectedEstimate": 380,
+      "estimateAcceptRange": [
+        375,
+        385
+      ],
+      "sampleAnswers": [
+        {
+          "case": "normal",
+          "uoc_luong": 380,
+          "ket_qua_dung": 383,
+          "expect": {
+            "uoc_luong_dung": true,
+            "tinh_dung": true,
+            "diem": 2
+          }
+        },
+        {
+          "case": "boundary_pass",
+          "uoc_luong": 385,
+          "ket_qua_dung": 383,
+          "expect": {
+            "uoc_luong_dung": true,
+            "tinh_dung": true,
+            "diem": 2
+          }
+        },
+        {
+          "case": "boundary_fail",
+          "uoc_luong": 386,
+          "ket_qua_dung": 384,
+          "expect": {
+            "uoc_luong_dung": false,
+            "tinh_dung": false,
+            "diem": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "EST-02",
+      "a": 306,
+      "b": 129,
+      "operator": "+",
+      "prompt": "Cửa hàng trái cây buổi sáng bán 306 quả cam, buổi chiều bán 129 quả cam. Hỏi cả ngày bán được bao nhiêu quả cam?",
+      "expectedResult": 435,
+      "expectedEstimate": 440,
+      "estimateAcceptRange": [
+        435,
+        445
+      ],
+      "sampleAnswers": [
+        {
+          "case": "normal",
+          "uoc_luong": 440,
+          "ket_qua_dung": 435,
+          "expect": {
+            "uoc_luong_dung": true,
+            "tinh_dung": true,
+            "diem": 2
+          }
+        },
+        {
+          "case": "boundary_pass",
+          "uoc_luong": 445,
+          "ket_qua_dung": 435,
+          "expect": {
+            "uoc_luong_dung": true,
+            "tinh_dung": true,
+            "diem": 2
+          }
+        },
+        {
+          "case": "boundary_fail",
+          "uoc_luong": 446,
+          "ket_qua_dung": 436,
+          "expect": {
+            "uoc_luong_dung": false,
+            "tinh_dung": false,
+            "diem": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "EST-03",
+      "a": 418,
+      "b": 267,
+      "operator": "+",
+      "prompt": "Khối lớp Ba có 418 học sinh nam và 267 học sinh nữ. Hỏi khối lớp Ba có tất cả bao nhiêu học sinh?",
+      "expectedResult": 685,
+      "expectedEstimate": 690,
+      "estimateAcceptRange": [
+        685,
+        695
+      ],
+      "sampleAnswers": [
+        {
+          "case": "normal",
+          "uoc_luong": 690,
+          "ket_qua_dung": 685,
+          "expect": {
+            "uoc_luong_dung": true,
+            "tinh_dung": true,
+            "diem": 2
+          }
+        },
+        {
+          "case": "boundary_pass",
+          "uoc_luong": 695,
+          "ket_qua_dung": 685,
+          "expect": {
+            "uoc_luong_dung": true,
+            "tinh_dung": true,
+            "diem": 2
+          }
+        },
+        {
+          "case": "boundary_fail",
+          "uoc_luong": 696,
+          "ket_qua_dung": 686,
+          "expect": {
+            "uoc_luong_dung": false,
+            "tinh_dung": false,
+            "diem": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "EST-04",
+      "a": 152,
+      "b": 193,
+      "operator": "+",
+      "prompt": "Nhà sách nhập về 152 nhãn vở xanh và 193 nhãn vở đỏ. Hỏi nhà sách nhập về bao nhiêu nhãn vở?",
+      "expectedResult": 345,
+      "expectedEstimate": 350,
+      "estimateAcceptRange": [
+        345,
+        355
+      ],
+      "sampleAnswers": [
+        {
+          "case": "normal",
+          "uoc_luong": 350,
+          "ket_qua_dung": 345,
+          "expect": {
+            "uoc_luong_dung": true,
+            "tinh_dung": true,
+            "diem": 2
+          }
+        },
+        {
+          "case": "boundary_pass",
+          "uoc_luong": 355,
+          "ket_qua_dung": 345,
+          "expect": {
+            "uoc_luong_dung": true,
+            "tinh_dung": true,
+            "diem": 2
+          }
+        },
+        {
+          "case": "boundary_fail",
+          "uoc_luong": 356,
+          "ket_qua_dung": 346,
+          "expect": {
+            "uoc_luong_dung": false,
+            "tinh_dung": false,
+            "diem": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "EST-05",
+      "a": 734,
+      "b": 286,
+      "operator": "-",
+      "prompt": "Ở kho có 734 chiếc bút, đã chuyển đi 286 chiếc bút. Hỏi trong kho còn lại bao nhiêu chiếc bút?",
+      "expectedResult": 448,
+      "expectedEstimate": 450,
+      "estimateAcceptRange": [
+        445,
+        455
+      ],
+      "sampleAnswers": [
+        {
+          "case": "normal",
+          "uoc_luong": 450,
+          "ket_qua_dung": 448,
+          "expect": {
+            "uoc_luong_dung": true,
+            "tinh_dung": true,
+            "diem": 2
+          }
+        },
+        {
+          "case": "boundary_pass",
+          "uoc_luong": 455,
+          "ket_qua_dung": 448,
+          "expect": {
+            "uoc_luong_dung": true,
+            "tinh_dung": true,
+            "diem": 2
+          }
+        },
+        {
+          "case": "boundary_fail",
+          "uoc_luong": 456,
+          "ket_qua_dung": 449,
+          "expect": {
+            "uoc_luong_dung": false,
+            "tinh_dung": false,
+            "diem": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "EST-06",
+      "a": 500,
+      "b": 127,
+      "operator": "-",
+      "prompt": "Vườn trường có 500 cây giống, đã trồng 127 cây. Hỏi còn bao nhiêu cây giống chưa trồng?",
+      "expectedResult": 373,
+      "expectedEstimate": 370,
+      "estimateAcceptRange": [
+        365,
+        375
+      ],
+      "sampleAnswers": [
+        {
+          "case": "normal",
+          "uoc_luong": 370,
+          "ket_qua_dung": 373,
+          "expect": {
+            "uoc_luong_dung": true,
+            "tinh_dung": true,
+            "diem": 2
+          }
+        },
+        {
+          "case": "boundary_pass",
+          "uoc_luong": 375,
+          "ket_qua_dung": 373,
+          "expect": {
+            "uoc_luong_dung": true,
+            "tinh_dung": true,
+            "diem": 2
+          }
+        },
+        {
+          "case": "boundary_fail",
+          "uoc_luong": 376,
+          "ket_qua_dung": 374,
+          "expect": {
+            "uoc_luong_dung": false,
+            "tinh_dung": false,
+            "diem": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "EST-07",
+      "a": 861,
+      "b": 409,
+      "operator": "-",
+      "prompt": "Một cuộn dây dài 861 cm, đã cắt đi 409 cm. Hỏi cuộn dây còn lại bao nhiêu xăng-ti-mét?",
+      "expectedResult": 452,
+      "expectedEstimate": 450,
+      "estimateAcceptRange": [
+        445,
+        455
+      ],
+      "sampleAnswers": [
+        {
+          "case": "normal",
+          "uoc_luong": 450,
+          "ket_qua_dung": 452,
+          "expect": {
+            "uoc_luong_dung": true,
+            "tinh_dung": true,
+            "diem": 2
+          }
+        },
+        {
+          "case": "boundary_pass",
+          "uoc_luong": 455,
+          "ket_qua_dung": 452,
+          "expect": {
+            "uoc_luong_dung": true,
+            "tinh_dung": true,
+            "diem": 2
+          }
+        },
+        {
+          "case": "boundary_fail",
+          "uoc_luong": 456,
+          "ket_qua_dung": 453,
+          "expect": {
+            "uoc_luong_dung": false,
+            "tinh_dung": false,
+            "diem": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "EST-08",
+      "a": 625,
+      "b": 318,
+      "operator": "-",
+      "prompt": "Thư viện có 625 quyển truyện, học sinh đã mượn 318 quyển. Hỏi thư viện còn lại bao nhiêu quyển truyện?",
+      "expectedResult": 307,
+      "expectedEstimate": 310,
+      "estimateAcceptRange": [
+        305,
+        315
+      ],
+      "sampleAnswers": [
+        {
+          "case": "normal",
+          "uoc_luong": 310,
+          "ket_qua_dung": 307,
+          "expect": {
+            "uoc_luong_dung": true,
+            "tinh_dung": true,
+            "diem": 2
+          }
+        },
+        {
+          "case": "boundary_pass",
+          "uoc_luong": 315,
+          "ket_qua_dung": 307,
+          "expect": {
+            "uoc_luong_dung": true,
+            "tinh_dung": true,
+            "diem": 2
+          }
+        },
+        {
+          "case": "boundary_fail",
+          "uoc_luong": 316,
+          "ket_qua_dung": 308,
+          "expect": {
+            "uoc_luong_dung": false,
+            "tinh_dung": false,
+            "diem": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "EST-09",
+      "a": 7,
+      "b": 8,
+      "operator": "×",
+      "prompt": "Có 7 hộp, mỗi hộp có 8 chiếc bút. Hỏi có tất cả bao nhiêu chiếc bút?",
+      "expectedResult": 56,
+      "expectedEstimate": 60,
+      "estimateAcceptRange": [
+        55,
+        65
+      ],
+      "sampleAnswers": [
+        {
+          "case": "normal",
+          "uoc_luong": 60,
+          "ket_qua_dung": 56,
+          "expect": {
+            "uoc_luong_dung": true,
+            "tinh_dung": true,
+            "diem": 2
+          }
+        },
+        {
+          "case": "boundary_pass",
+          "uoc_luong": 65,
+          "ket_qua_dung": 56,
+          "expect": {
+            "uoc_luong_dung": true,
+            "tinh_dung": true,
+            "diem": 2
+          }
+        },
+        {
+          "case": "boundary_fail",
+          "uoc_luong": 66,
+          "ket_qua_dung": 57,
+          "expect": {
+            "uoc_luong_dung": false,
+            "tinh_dung": false,
+            "diem": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "EST-10",
+      "a": 9,
+      "b": 5,
+      "operator": "×",
+      "prompt": "Mỗi bàn có 5 bạn ngồi. Có 9 bàn như thế. Hỏi có tất cả bao nhiêu bạn?",
+      "expectedResult": 45,
+      "expectedEstimate": 50,
+      "estimateAcceptRange": [
+        45,
+        55
+      ],
+      "sampleAnswers": [
+        {
+          "case": "normal",
+          "uoc_luong": 50,
+          "ket_qua_dung": 45,
+          "expect": {
+            "uoc_luong_dung": true,
+            "tinh_dung": true,
+            "diem": 2
+          }
+        },
+        {
+          "case": "boundary_pass",
+          "uoc_luong": 55,
+          "ket_qua_dung": 45,
+          "expect": {
+            "uoc_luong_dung": true,
+            "tinh_dung": true,
+            "diem": 2
+          }
+        },
+        {
+          "case": "boundary_fail",
+          "uoc_luong": 56,
+          "ket_qua_dung": 46,
+          "expect": {
+            "uoc_luong_dung": false,
+            "tinh_dung": false,
+            "diem": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "EST-11",
+      "a": 72,
+      "b": 9,
+      "operator": "÷",
+      "prompt": "Có 72 quả cam được chia đều vào 9 giỏ. Hỏi mỗi giỏ có bao nhiêu quả cam?",
+      "expectedResult": 8,
+      "expectedEstimate": 10,
+      "estimateAcceptRange": [
+        5,
+        15
+      ],
+      "sampleAnswers": [
+        {
+          "case": "normal",
+          "uoc_luong": 10,
+          "ket_qua_dung": 8,
+          "expect": {
+            "uoc_luong_dung": true,
+            "tinh_dung": true,
+            "diem": 2
+          }
+        },
+        {
+          "case": "boundary_pass",
+          "uoc_luong": 15,
+          "ket_qua_dung": 8,
+          "expect": {
+            "uoc_luong_dung": true,
+            "tinh_dung": true,
+            "diem": 2
+          }
+        },
+        {
+          "case": "boundary_fail",
+          "uoc_luong": 16,
+          "ket_qua_dung": 9,
+          "expect": {
+            "uoc_luong_dung": false,
+            "tinh_dung": false,
+            "diem": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "EST-12",
+      "a": 24,
+      "b": 6,
+      "operator": "÷",
+      "prompt": "Có 24 quyển vở được chia đều cho 6 bạn. Hỏi mỗi bạn nhận được bao nhiêu quyển vở?",
+      "expectedResult": 4,
+      "expectedEstimate": 0,
+      "estimateAcceptRange": [
+        0,
+        5
+      ],
+      "sampleAnswers": [
+        {
+          "case": "normal",
+          "uoc_luong": 0,
+          "ket_qua_dung": 4,
+          "expect": {
+            "uoc_luong_dung": true,
+            "tinh_dung": true,
+            "diem": 2
+          }
+        },
+        {
+          "case": "boundary_pass",
+          "uoc_luong": 5,
+          "ket_qua_dung": 4,
+          "expect": {
+            "uoc_luong_dung": true,
+            "tinh_dung": true,
+            "diem": 2
+          }
+        },
+        {
+          "case": "boundary_fail",
+          "uoc_luong": 6,
+          "ket_qua_dung": 5,
+          "expect": {
+            "uoc_luong_dung": false,
+            "tinh_dung": false,
+            "diem": 0
+          }
+        }
+      ]
+    }
+  ]
+}
