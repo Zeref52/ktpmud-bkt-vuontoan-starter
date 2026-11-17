@@ -8,7 +8,7 @@ const path = require('path');
  * Không phụ thuộc Express/SQLite để có thể Unit Test độc lập.
  */
 const OPERATORS = Object.freeze(['+', '-', '×', '÷']);
-const FIXTURE_PATH = path.join(__dirname, 'fixtures', 'estimate.json');
+const FIXTURE_PATH = path.join(__dirname, 'fixtures', 'estimate-fixtures.json');
 
 let fixtureIndex = 0;
 
@@ -17,7 +17,7 @@ function loadEstimateFixtures() {
   const data = JSON.parse(content);
 
   if (!Array.isArray(data.items) || data.items.length === 0) {
-    throw new Error('File server/fixtures/estimate.json không có câu hỏi.');
+    throw new Error('File server/fixtures/estimate-fixtures.json không có câu hỏi.');
   }
 
   return data.items;
