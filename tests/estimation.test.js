@@ -125,7 +125,7 @@ test('Fixture có đúng 12 câu, phép tính khớp đáp án và không sinh k
     '..',
     'server',
     'fixtures',
-    'estimate.json'
+    'estimate-fixtures.json'
   );
 
   const fixture = JSON.parse(fs.readFileSync(fixturePath, 'utf8'));
@@ -148,3 +148,4 @@ test('Fixture có đúng 12 câu, phép tính khớp đáp án và không sinh k
     );
   }
 });
+
