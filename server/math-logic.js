@@ -192,7 +192,8 @@ function scoreMathAnswer({ a, b, operator, uoc_luong, ket_qua_dung }) {
     expectedResult,
     score: Number(estimateCorrect) + Number(exactCorrect),
   };
-  
+};
+
 module.exports = {
   OPERATORS,
   calculate,
