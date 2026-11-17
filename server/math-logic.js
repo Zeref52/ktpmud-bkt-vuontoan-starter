@@ -162,9 +162,12 @@ function scoreMathAnswer({ a, b, operator, uoc_luong, ket_qua_dung }) {
   const expectedResult = calculate(a, b, operator);
   const estimate = toAnswer(uoc_luong, 'uoc_luong');
   const exactAnswer = toAnswer(ket_qua_dung, 'ket_qua_dung');
+
   const expectedEstimate = Math.round(expectedResult / 10) * 10;
   const estimateCorrect = Math.abs(estimate - expectedEstimate) <= 5;
   const exactCorrect = exactAnswer === expectedResult;
+
+  const score = Number(estimateCorrect) + Number(exactCorrect);
 
   return {
     uoc_luong_dung: estimateCorrect,
@@ -177,15 +180,14 @@ function scoreMathAnswer({ a, b, operator, uoc_luong, ket_qua_dung }) {
 
     ket_qua_uoc_luong: expectedEstimate,
     ket_qua_chinh_xac: expectedResult,
-    diem: Number(estimateCorrect) + Number(exactCorrect),
+    diem: score,
     tong_diem: 2,
 
-    // Các trường phục vụ API và lưu SQLite
     estimateCorrect,
     exactCorrect,
     expectedEstimate,
     expectedResult,
-    score: Number(estimateCorrect) + Number(exactCorrect),
+    score,
   };
 }
 
