@@ -201,14 +201,19 @@ router.get('/math/generate', requireAuth, (req, res) => {
 
 router.post('/math/score', requireAuth, (req, res) => {
   const { questionId, uoc_luong, ket_qua_dung } = req.body || {};
+
   if (!questionId) {
     return res.status(400).json({ error: 'Thiếu questionId.' });
   }
 
   cleanupMathChallenges();
+
   const problem = mathChallenges.get(String(questionId));
+
   if (!problem || problem.userId !== req.user.id) {
-    return res.status(404).json({ error: 'Bài toán không tồn tại, đã hết hạn hoặc không thuộc tài khoản này.' });
+    return res.status(404).json({
+      error: 'Bài toán không tồn tại, đã hết hạn hoặc không thuộc tài khoản này.'
+    });
   }
 
   try {
@@ -219,9 +224,46 @@ router.post('/math/score', requireAuth, (req, res) => {
       uoc_luong,
       ket_qua_dung,
     });
+
     // Mỗi đề chỉ được chấm một lần.
     mathChallenges.delete(String(questionId));
+
+    // Lưu kết quả làm bài vào SQLite.
+    db.prepare(`
+      INSERT INTO estimate_attempts (
+        user_id,
+        question_id,
+        question_text,
+        a,
+        b,
+        operator,
+        uoc_luong,
+        ket_qua_dung,
+        expected_estimate,
+        expected_result,
+        estimate_correct,
+        exact_correct,
+        score
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(
+      req.user.id,
+      questionId,
+      problem.prompt,
+      problem.a,
+      problem.b,
+      problem.operator,
+      Number(uoc_luong),
+      Number(ket_qua_dung),
+      result.expectedEstimate,
+      result.expectedResult,
+      result.estimateCorrect ? 1 : 0,
+      result.exactCorrect ? 1 : 0,
+      result.score
+    );
+
     return res.json({ questionId, ...result });
+
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
